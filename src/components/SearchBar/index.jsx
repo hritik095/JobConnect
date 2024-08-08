@@ -1,13 +1,24 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-function SearchBar(props) {
+function SearchBar({ fetchJobsCustom, resetFilters }) {
     const [jobCriteria, setJobCriteria] = useState({
         title: "",
         location: "",
         experience: "",
         type: ""
     });
+
+    useEffect(() => {
+        if (resetFilters) {
+            setJobCriteria({
+                title: "",
+                location: "",
+                experience: "",
+                type: ""
+            });
+        }
+    }, [resetFilters]);
 
     const handleChange = (e) => {
         setJobCriteria((prevState) => ({
@@ -17,7 +28,7 @@ function SearchBar(props) {
     };
 
     const search = async () => {
-        await props.fetchJobsCustom(jobCriteria);
+        await fetchJobsCustom(jobCriteria);
     };
 
     return (
@@ -54,9 +65,9 @@ function SearchBar(props) {
     );
 }
 
-// Define prop types
 SearchBar.propTypes = {
-    fetchJobsCustom: PropTypes.func.isRequired
+    fetchJobsCustom: PropTypes.func.isRequired,
+    resetFilters: PropTypes.bool.isRequired
 };
 
 export default SearchBar;
